@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hijau Langit - Gerakan Tanam Pohon</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .hero-pattern {
+            background-color: #f0fdf4;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2322c55e' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #22c55e, #15803d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .tree-counter {
+            transition: all 0.5s ease;
+        }
+        .counter-animate {
+            transform: scale(1.1);
+        }
+        .scroll-prompt {
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+        .parallax {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .card {
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .progress-bar {
+            transition: width 1.5s ease-in-out;
+        }
+        .testimonial-slider {
+            scroll-snap-type: x mandatory;
+        }
+        .testimonial-slide {
+            scroll-snap-align: center;
+        }
+        .leaf {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z'%3E%3C/path%3E%3Cpath d='M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12'%3E%3C/path%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.7;
+            pointer-events: none;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigasi -->
+    <nav class="fixed w-full bg-white shadow-md z-50 py-4 backdrop-filter backdrop-blur-lg bg-opacity-80">
+        <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <span class="text-green-600"><i class="fas fa-seedling text-2xl"></i></span>
+                <span class="font-bold text-xl text-gray-800">Hijau Langit</span>
+            </a>
+            
+            <div class="hidden md:flex space-x-8">
+                <a href="#tentang" class="text-gray-600 hover:text-green-600 transition-colors duration-300">Tentang</a>
+                <a href="#program" class="text-gray-600 hover:text-green-600 transition-colors duration-300">Program</a>
+                <a href="#capaian" class="text-gray-600 hover:text-green-600 transition-colors duration-300">Capaian</a>
+                <a href="#bergabung" class="text-gray-600 hover:text-green-600 transition-colors duration-300">Bergabung</a>
+                <a href="#kontak" class="text-gray-600 hover:text-green-600 transition-colors duration-300">Kontak</a>
+            </div>
+            
+            <div class="md:hidden">
+                <button id="menu-toggle" class="text-gray-600 hover:text-green-600 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="hidden md:block">
+                <a href="#donasi" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-full transition-colors duration-300 flex items-center space-x-2">
+                    <i class="fas fa-heart"></i>
+                    <span>Donasi</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white w-full">
+            <div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+                <a href="#tentang" class="text-gray-600 hover:text-green-600 transition-colors duration-300">Tentang</a>
+                <a href="#program" class="text-gray-600 hover:text-green-600 transition-colors duration-300">Program</a>
+                <a href="#capaian" class="text-gray-600 hover:text-green-600 transition-colors duration-300">Capaian</a>
+                <a href="#bergabung" class="text-gray-600 hover:text-green-600 transition-colors duration-300">Bergabung</a>
+                <a href="#kontak" class="text-gray-600 hover:text-green-600 transition-colors duration-300">Kontak</a>
+                <a href="#donasi" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-full transition-colors text-center">
+                    <i class="fas fa-heart mr-2"></i>Donasi
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="hero" class="hero-pattern min-h-screen flex items-center relative overflow-hidden">
+        <div class="container mx-auto px-4 md:px-6 py-24 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 animate__animated animate__fadeInLeft">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                    <span class="gradient-text">Hijau Langit</span>
+                    <div class="text-gray-800">Gerakan Tanam Pohon</div>
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 mb-8">Bersama kita pulihkan hutan Indonesia dan pulihkan keseimbangan alam untuk generasi mendatang.</p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#donasi" class="bg-green-600 hover:bg-green-700 text-white text-center font-semibold py-3 px-8 rounded-full transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        Donasi Sekarang
+                    </a>
+                    <a href="#program" class="border-2 border-green-600 text-green-600 hover:bg-green-50 text-center font-semibold py-3 px-8 rounded-full transition-colors duration-300">
+                        Lihat Program
+                    </a>
+                </div>
+            </div>
+            <div class="md:w-1/2 mt-12 md:mt-0 animate__animated animate__fadeInRight">
+                <img src="./img/hero.jpg" alt="Ilustrasi tanam pohon" class="rounded-lg shadow-2xl transform -rotate-2 hover:rotate-0 transition-transform duration-500">
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 scroll-prompt text-green-600">
+            <i class="fas fa-chevron-down text-3xl"></i>
+        </div>
+        
+        <!-- Flying Leaves Animation -->
+        <div id="leaves-container"></div>
+    </header>
+
+    <!-- Counter Section -->
+    <section class="bg-green-600 text-white py-12">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex flex-wrap justify-center text-center">
+                <div class="w-full md:w-1/3 p-4">
+                    <div class="tree-counter mb-2 text-4xl md:text-5xl font-bold" data-target="127650">0</div>
+                    <div class="text-lg opacity-90">Pohon Tertanam</div>
+                </div>
+                <div class="w-full md:w-1/3 p-4">
+                    <div class="tree-counter mb-2 text-4xl md:text-5xl font-bold" data-target="47">0</div>
+                    <div class="text-lg opacity-90">Lokasi Di Indonesia</div>
+                </div>
+                <div class="w-full md:w-1/3 p-4">
+                    <div class="tree-counter mb-2 text-4xl md:text-5xl font-bold" data-target="12500">0</div>
+                    <div class="text-lg opacity-90">Relawan Aktif</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tentang Section -->
+    <section id="tentang" class="py-20 bg-white">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-12 md:mb-0">
+                    <img src="./img/about.jpg" alt="Tim Hijau Langit" class="rounded-lg shadow-xl">
+                </div>
+                <div class="md:w-1/2 md:pl-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">Tentang Hijau Langit</h2>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Hijau Langit adalah gerakan sosial yang berkomitmen untuk memulihkan kawasan hutan Indonesia yang rusak melalui kegiatan penanaman pohon. Kami percaya bahwa setiap pohon yang ditanam adalah investasi untuk masa depan bumi dan generasi mendatang.
+                    </p>
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        Dimulai pada tahun 2020, gerakan kami telah berkembang menjadi komunitas nasional dengan ribuan relawan yang tersebar di seluruh Indonesia. Kami bekerja sama dengan komunitas lokal, pemerintah, dan sektor swasta untuk merehabilitasi lahan-lahan kritis dan memberikan edukasi tentang pentingnya pelestarian hutan.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center">
+                            <div class="mr-4 bg-green-100 p-3 rounded-full text-green-600">
+                                <i class="fas fa-tree text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold">Rehabilitasi Hutan</h3>
+                                <p class="text-sm text-gray-500">Pemulihan ekosistem hutan</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="mr-4 bg-green-100 p-3 rounded-full text-green-600">
+                                <i class="fas fa-users text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold">Pemberdayaan Komunitas</h3>
+                                <p class="text-sm text-gray-500">Kolaborasi bersama masyarakat</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Program Section -->
+    <section id="program" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Program Kami</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">
+                    Kami menjalankan berbagai program penanaman pohon dan konservasi yang disesuaikan dengan kebutuhan ekologi dan masyarakat lokal.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="h-56 overflow-hidden">
+                        <img src="./img/program1.jpg" alt="Program Hutan Kota" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">Hutan Kota</h3>
+                        <p class="text-gray-600 mb-4">
+                            Menanam pohon di area perkotaan untuk meningkatkan kualitas udara dan menciptakan ruang hijau untuk masyarakat.
+                        </p>
+                        <div class="mt-4">
+                            <a href="#" class="text-green-600 hover:text-green-700 font-medium flex items-center">
+                                Pelajari Lebih Lanjut
+                                <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="h-56 overflow-hidden">
+                        <img src="./img/program2.jpg" alt="Program Mangrove" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">Restorasi Mangrove</h3>
+                        <p class="text-gray-600 mb-4">
+                            Memulihkan hutan mangrove di pesisir untuk melindungi garis pantai dan mendukung keanekaragaman hayati laut.
+                        </p>
+                        <div class="mt-4">
+                            <a href="#" class="text-green-600 hover:text-green-700 font-medium flex items-center">
+                                Pelajari Lebih Lanjut
+                                <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="h-56 overflow-hidden">
+                        <img src="./img/program3.jpg" alt="Program Edukasi" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">Edukasi Lingkungan</h3>
+                        <p class="text-gray-600 mb-4">
+                            Program pendidikan untuk sekolah dan masyarakat tentang pentingnya menjaga hutan dan lingkungan.
+                        </p>
+                        <div class="mt-4">
+                            <a href="#" class="text-green-600 hover:text-green-700 font-medium flex items-center">
+                                Pelajari Lebih Lanjut
+                                <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Parallax Section -->
+    <section class="parallax h-96 bg-cover bg-center relative" style="background-image: url('/api/placeholder/1920/600')">
+        <div class="absolute inset-0 bg-green-900 bg-opacity-70"></div>
+        <div class="container mx-auto px-4 md:px-6 h-full flex items-center justify-center relative z-10">
+            <div class="text-center max-w-3xl">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Setiap Pohon Membuat Perbedaan</h2>
+                <p class="text-white text-lg mb-8">
+                    Satu pohon dapat menyerap hingga 22 kg CO₂ per tahun dan menghasilkan cukup oksigen untuk 2 orang. Bayangkan dampak dari jutaan pohon!
+                </p>
+                <a href="#donasi" class="bg-white text-green-600 hover:bg-green-50 text-lg font-semibold py-3 px-8 rounded-full inline-block shadow-lg transition-colors duration-300">
+                    Bergabunglah Dengan Gerakan Ini
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capaian Section -->
+    <section id="capaian" class="py-20 bg-white">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Capaian Kami</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">
+                    Perjalanan kami selama ini telah mencapai beberapa milestone penting dalam upaya pemulihan hutan Indonesia.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <span class="bg-green-100 text-green-600 w-8 h-8 rounded-full flex items-center justify-center mr-3">1</span>
+                            Target 1 Juta Pohon
+                        </h3>
+                        <div class="bg-gray-200 rounded-full h-4 mb-2">
+                            <div class="progress-bar bg-green-600 h-4 rounded-full" style="width: 0%" data-width="78%"></div>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-600">
+                            <span>127.650 pohon tertanam</span>
+                            <span>Target: 1.000.000</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <span class="bg-green-100 text-green-600 w-8 h-8 rounded-full flex items-center justify-center mr-3">2</span>
+                            Pelibatan Masyarakat Lokal
+                        </h3>
+                        <p class="text-gray-600 mb-4">
+                            Kami telah memberdayakan lebih dari 30 kelompok tani di 20 desa untuk menjadi bagian dari program penanaman pohon berkelanjutan.
+                        </p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <span class="bg-green-100 text-green-600 w-8 h-8 rounded-full flex items-center justify-center mr-3">3</span>
+                            Penghargaan & Rekognisi
+                        </h3>
+                        <p class="text-gray-600">
+                            Gerakan Hijau Langit telah mendapatkan penghargaan sebagai "Inisiatif Lingkungan Terbaik" dari Kementerian Lingkungan Hidup dan Kehutanan pada tahun 2023.
+                        </p>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="bg-green-50 rounded-xl p-8 shadow-lg">
+                        <h3 class="text-2xl font-bold mb-6 text-green-800">Dampak Lingkungan</h3>
+                        
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium text-gray-700">Penyerapan CO₂</span>
+                                <span class="font-medium text-green-600">2,804 ton/tahun</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-3">
+                                <div class="progress-bar bg-green-600 h-3 rounded-full" style="width: 0%" data-width="65%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium text-gray-700">Area Hutan Terpulihkan</span>
+                                <span class="font-medium text-green-600">350 hektar</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-3">
+                                <div class="progress-bar bg-green-600 h-3 rounded-full" style="width: 0%" data-width="45%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium text-gray-700">Perbaikan Kualitas Air</span>
+                                <span class="font-medium text-green-600">15 DAS</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-3">
+                                <div class="progress-bar bg-green-600 h-3 rounded-full" style="width: 0%" data-width="58%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium text-gray-700">Habitat Terlindungi</span>
+                                <span class="font-medium text-green-600">78 spesies</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-3">
+                                <div class="progress-bar bg-green-600 h-3 rounded-full" style="width: 0%" data-width="72%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonial Section -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Kata Mereka</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">
+                    Dengarkan pengalaman dari para relawan dan pendukung yang telah bergabung dengan gerakan Hijau Langit.
+                </p>
+            </div>
+            
+            <div class="relative">
+                <div id="testimonial-container" class="testimonial-slider flex overflow-x-auto pb-8 space-x-6 snap-x scrollbar-hide">
+                    <div class="testimonial-slide min-w-[300px] md:min-w-[400px] bg-white p-6 rounded-xl shadow-lg flex-shrink-0">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-4">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold">Ahmad Rizki</h3>
+                                <p class="text-sm text-gray-500">Relawan, Jakarta</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 italic">
+                            "Menjadi bagian dari Hijau Langit memberikan saya pengalaman berharga tentang bagaimana kita semua bisa berkontribusi untuk bumi. Setiap minggu menanam pohon bersama komunitas adalah momen yang sangat berarti."
+                        </p>
+                        <div class="mt-4 text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-slide min-w-[300px] md:min-w-[400px] bg-white p-6 rounded-xl shadow-lg flex-shrink-0">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-4">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold">Siti Nurhayati</h3>
+                                <p class="text-sm text-gray-500">Donatur, Surabaya</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 italic">
+                            "Transparansi dan dedikasi tim Hijau Langit membuat saya percaya untuk terus mendukung program-program mereka. Senang melihat dampak nyata dari donasi yang diberikan."
+                        </p>
+                        <div class="mt-4 text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-slide min-w-[300px] md:min-w-[400px] bg-white p-6 rounded-xl shadow-lg flex-shrink-0">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-4">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold">Budi Santoso</h3>
+                                <p class="text-sm text-gray-500">Petani Mitra, Yogyakarta</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 italic">
+                            "Program kemitraan dengan Hijau Langit telah membantu kami petani untuk belajar teknik agroforestri yang lebih berkelanjutan. Kini lahan kami lebih produktif dan lingkungan lebih terjaga."
+                        </p>
+                        <div class="mt-4 text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-slide min-w-[300px] md:min-w-[400px] bg-white p-6 rounded-xl shadow-lg flex-shrink-0">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-4">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold">Maya Kusuma</h3>
+                                <p class="text-sm text-gray-500">Guru SD, Bandung</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 italic">
+                            "Program edukasi Hijau Langit sangat membantu para guru untuk mengajarkan tentang lingkungan kepada murid-murid. Kegiatan menanam pohon bersama membuat anak-anak lebih mencintai alam."
+                        </p>
+                        <div class="mt-4 text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="testimonial-prev" class="absolute top-1/2 left-0 transform -translate-y-1/2 bg-white shadow-md rounded-full w-10 h-10 flex items-center justify-center text-green-600 hover:bg-green-50 focus:outline-none z-10">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <button id="testimonial-next" class="absolute top-1/2 right-0 transform -translate-y-1/2 bg-white shadow-md rounded-full w-10 h-10 flex items-center justify-center text-green-600 hover:bg-green-50 focus:outline-none z-10">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bergabung Section -->
+    <section id="bergabung" class="py-20 bg-white">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Bergabung dengan Kami</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">
+                    Ada banyak cara untuk menjadi bagian dari gerakan Hijau Langit. Pilih peran yang sesuai dengan minat dan kemampuan Anda.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white border border-green-200 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl">
+                    <div class="h-48 bg-green-600 flex items-center justify-center text-white">
+                        <i class="fas fa-hands-helping text-6xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">Menjadi Relawan</h3>
+                        <p class="text-gray-600 mb-6">
+                            Bergabunglah dalam kegiatan penanaman, edukasi, dan kampanye bersama relawan lainnya dari berbagai daerah.
+                        </p>
+                        <ul class="mb-6 space-y-2">
+                            <li class="flex items-center">
+                                <span class="text-green-600 mr-2"><i class="fas fa-check-circle"></i></span>
+                                <span class="text-gray-700">Partisipasi dalam aksi tanam</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="text-green-600 mr-2"><i class="fas fa-check-circle"></i></span>
+                                <span class="text-gray-700">Edukasi masyarakat</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="text-green-600 mr-2"><i class="fas fa-check-circle"></i></span>
+                                <span class="text-gray-700">Kampanye media sosial</span>
+                            </li>
+                        </ul>
+                        <button id="relawan-btn" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300 w-full">
+                            Daftar Relawan
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-white border border-green-200 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl">
+                    <div class="h-48 bg-green-600 flex items-center justify-center text-white">
+                        <i class="fas fa-hand-holding-heart text-6xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">Menjadi Donatur</h3>
+                        <p class="text-gray-600 mb-6">
+                            Dukung gerakan ini dengan donasi untuk bibit pohon, peralatan, dan operasional program berkelanjutan.
+                        </p>
+                        <ul class="mb-6 space-y-2">
+                            <li class="flex items-center">
+                                <span class="text-green-600 mr-2"><i class="fas fa-check-circle"></i></span>
+                                <span class="text-gray-700">Donasi sekali waktu</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="text-green-600 mr-2"><i class="fas fa-check-circle"></i></span>
+                                <span class="text-gray-700">Program donasi bulanan</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="text-green-600 mr-2"><i class="fas fa-check-circle"></i></span>
+                                <span class="text-gray-700">Laporan transparansi</span>
+                            </li>
+                        </ul>
+                        <a href="#donasi" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300 block text-center">
+                            Donasi Sekarang
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="bg-white border border-green-200 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl">
+                    <div class="h-48 bg-green-600 flex items-center justify-center text-white">
+                        <i class="fas fa-building text-6xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">Menjadi Mitra</h3>
+                        <p class="text-gray-600 mb-6">
+                            Mari berkolaborasi untuk program CSR, kampanye lingkungan, atau inisiatif keberlanjutan lainnya.
+                        </p>
+                        <ul class="mb-6 space-y-2">
+                            <li class="flex items-center">
+                                <span class="text-green-600 mr-2"><i class="fas fa-check-circle"></i></span>
+                                <span class="text-gray-700">Program CSR perusahaan</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="text-green-600 mr-2"><i class="fas fa-check-circle"></i></span>
+                                <span class="text-gray-700">Kemitraan strategis</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="text-green-600 mr-2"><i class="fas fa-check-circle"></i></span>
+                                <span class="text-gray-700">Brand sustainability</span>
+                            </li>
+                        </ul>
+                        <button id="mitra-btn" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300 w-full">
+                            Jadi Mitra Kami
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Donasi Section -->
+    <section id="donasi" class="py-20 bg-green-50">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-12 md:mb-0">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">Donasi untuk Masa Depan Hijau</h2>
+                    <p class="text-gray-600 mb-6">
+                        Setiap rupiah yang Anda sumbangkan akan membantu kami menanam lebih banyak pohon dan memperluas dampak positif bagi lingkungan dan masyarakat.
+                    </p>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                        <h3 class="text-xl font-bold mb-4">Berapakah nilai donasi Anda?</h3>
+                        
+                        <div class="grid grid-cols-3 gap-4 mb-6">
+                            <button class="donation-btn py-3 border-2 border-green-600 text-green-600 rounded-lg hover:bg-green-50 transition-colors duration-300" data-amount="50000">
+                                Rp50.000
+                            </button>
+                            <button class="donation-btn py-3 border-2 border-green-600 text-green-600 rounded-lg hover:bg-green-50 transition-colors duration-300" data-amount="100000">
+                                Rp100.000
+                            </button>
+                            <button class="donation-btn py-3 border-2 border-green-600 text-green-600 rounded-lg hover:bg-green-50 transition-colors duration-300" data-amount="250000">
+                                Rp250.000
+                            </button>
+                            <button class="donation-btn py-3 border-2 border-green-600 text-green-600 rounded-lg hover:bg-green-50 transition-colors duration-300" data-amount="500000">
+                                Rp500.000
+                            </button>
+                            <button class="donation-btn py-3 border-2 border-green-600 text-green-600 rounded-lg hover:bg-green-50 transition-colors duration-300" data-amount="1000000">
+                                Rp1.000.000
+                            </button>
+                            <button class="donation-btn py-3 border-2 border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors duration-300" id="custom-amount">
+                                Jumlah Lain
+                            </button>
+                        </div>
+                        
+                        <div id="custom-amount-input" class="mb-6 hidden">
+                            <label class="block text-gray-700 mb-2">Masukkan jumlah:</label>
+                            <input type="number" class="w-full border border-gray-300 rounded-lg py-2 px-4 focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50" placeholder="Rp">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-700 mb-2">Metode Pembayaran:</label>
+                            <select class="w-full border border-gray-300 rounded-lg py-2 px-4 mb-6 focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50">
+                                <option>Transfer Bank</option>
+                                <option>E-Wallet</option>
+                                <option>Kartu Kredit</option>
+                                <option>QRIS</option>
+                            </select>
+                            
+                            <button class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300 w-full flex justify-center items-center">
+                                <i class="fas fa-heart mr-2"></i> Donasi Sekarang
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-500">
+                        <p class="mb-2">
+                            <i class="fas fa-shield-alt text-green-600 mr-2"></i>
+                            100% aman dan terenkripsi
+                        </p>
+                        <p>
+                            <i class="fas fa-file-alt text-green-600 mr-2"></i>
+                            Anda akan menerima laporan penggunaan donasi secara berkala
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2 md:pl-12">
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold mb-6">Dampak Donasi Anda</h3>
+                        
+                        <div class="mb-6 flex items-start">
+                            <div class="bg-green-100 p-3 rounded-full text-green-600 mr-4">
+                                <i class="fas fa-seedling text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Rp50.000</h4>
+                                <p class="text-gray-600">Menanam dan merawat 5 pohon selama 1 tahun pertama</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6 flex items-start">
+                            <div class="bg-green-100 p-3 rounded-full text-green-600 mr-4">
+                                <i class="fas fa-users text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Rp100.000</h4>
+                                <p class="text-gray-600">Memberikan pelatihan pengelolaan hutan untuk 1 keluarga petani</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6 flex items-start">
+                            <div class="bg-green-100 p-3 rounded-full text-green-600 mr-4">
+                                <i class="fas fa-graduation-cap text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Rp250.000</h4>
+                                <p class="text-gray-600">Menjalankan program edukasi lingkungan untuk 1 kelas sekolah</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-8 flex items-start">
+                            <div class="bg-green-100 p-3 rounded-full text-green-600 mr-4">
+                                <i class="fas fa-map-marked-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Rp1.000.000</h4>
+                                <p class="text-gray-600">Menginisiasi program restorasi di lokasi baru dengan 100 pohon pertama</p>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 pt-6">
+                            <h4 class="font-semibold mb-4">Berlangganan donasi bulanan:</h4>
+                            <p class="text-gray-600 mb-4">
+                                Dengan berlangganan, Anda membantu keberlanjutan program jangka panjang kami.
+                            </p>
+                            <label class="flex items-center mb-6 cursor-pointer">
+                                <input type="checkbox" class="form-checkbox h-5 w-5 text-green-600 rounded focus:ring-green-500">
+                                <span class="ml-2 text-gray-700">Ya, saya ingin berdonasi secara bulanan</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-green-600 text-white">
+        <div class="container mx-auto px-4 md:px-6 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Satu Pohon, Satu Langkah untuk Bumi yang Lebih Baik</h2>
+            <p class="text-lg mb-8 opacity-90 max-w-3xl mx-auto">
+                Bergabunglah dengan ribuan orang lainnya yang telah memutuskan untuk menjadi bagian dari solusi. Bersama, kita bisa membuat perbedaan nyata.
+            </p>
+            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center">
+                <a href="#donasi" class="bg-white text-green-600 hover:bg-green-50 font-semibold py-3 px-8 rounded-full transition-colors duration-300 inline-flex items-center justify-center">
+                    <i class="fas fa-heart mr-2"></i> Donasi
+                </a>
+                <a href="#bergabung" class="border-2 border-white text-white hover:bg-green-700 font-semibold py-3 px-8 rounded-full transition-colors duration-300 inline-flex items-center justify-center">
+                    <i class="fas fa-users mr-2"></i> Bergabung
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kontak Section -->
+    <section id="kontak" class="py-20 bg-white">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Hubungi Kami</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">
+                    Punya pertanyaan atau ingin berdiskusi lebih lanjut? Tim kami siap membantu Anda.
+                </p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row">
+                <div class="md:w-1/2 mb-12 md:mb-0">
+                    <form class="bg-white p-8 rounded-xl shadow-lg">
+                        <div class="mb-6">
+                            <label class="block text-gray-700 mb-2" for="name">Nama Lengkap</label>
+                            <input type="text" id="name" class="w-full border border-gray-300 rounded-lg py-3 px-4 focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50" placeholder="Masukkan nama lengkap Anda">
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-gray-700 mb-2" for="email">Email</label>
+                            <input type="email" id="email" class="w-full border border-gray-300 rounded-lg py-3 px-4 focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50" placeholder="contoh@email.com">
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-gray-700 mb-2" for="subject">Subjek</label>
+                            <select id="subject" class="w-full border border-gray-300 rounded-lg py-3 px-4 focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50">
+                                <option>Donasi</option>
+                                <option>Program</option>
+                                <option>Relawan</option>
+                                <option>Kemitraan</option>
+                                <option>Lainnya</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-gray-700 mb-2" for="message">Pesan</label>
+                            <textarea id="message" rows="5" class="w-full border border-gray-300 rounded-lg py-3 px-4 focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50" placeholder="Tuliskan pesan Anda di sini..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300 w-full flex justify-center items-center">
+                            <i class="fas fa-paper-plane mr-2"></i> Kirim Pesan
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="md:w-1/2 md:pl-12">
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-4">Informasi Kontak</h3>
+                        <div class="flex items-start mb-4">
+                            <div class="bg-green-100 p-3 rounded-full text-green-600 mr-4">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">Kantor Pusat</h4>
+                                <p class="text-gray-600">Jl. Hijau Langit No. 25, Jakarta Selatan, 12345</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start mb-4">
+                            <div class="bg-green-100 p-3 rounded-full text-green-600 mr-4">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">Telepon</h4>
+                                <p class="text-gray-600">(021) 123-4567</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start mb-8">
+                            <div class="bg-green-100 p-3 rounded-full text-green-600 mr-4">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">Email</h4>
+                                <p class="text-gray-600">info@hijaulangit.org</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-4">Jam Operasional</h3>
+                        <ul class="space-y-2">
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">Senin - Jumat</span>
+                                <span class="font-medium">09:00 - 17:00</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">Sabtu</span>
+                                <span class="font-medium">09:00 - 14:00</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">Minggu</span>
+                                <span class="font-medium">Tutup</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-bold mb-4">Media Sosial</h3>
+                        <div class="flex space-x-4">
+                            <a href="#" class="bg-green-100 hover:bg-green-200 text-green-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="bg-green-100 hover:bg-green-200 text-green-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="bg-green-100 hover:bg-green-200 text-green-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="bg-green-100 hover:bg-green-200 text-green-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                            <a href="#" class="bg-green-100 hover:bg-green-200 text-green-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex flex-wrap mb-12">
+                <div class="w-full md:w-1/4 mb-8 md:mb-0">
+                    <div class="flex items-center space-x-2 mb-6">
+                        <span class="text-green-400"><i class="fas fa-seedling text-2xl"></i></span>
+                        <span class="font-bold text-xl">Hijau Langit</span>
+                    </div>
+                    <p class="text-gray-400 mb-6">
+                        Gerakan sosial yang berkomitmen untuk memulihkan kawasan hutan Indonesia melalui aksi tanam pohon dan edukasi lingkungan.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="w-full md:w-1/4 mb-8 md:mb-0">
+                    <h3 class="font-bold text-lg mb-6">Program</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Hutan Kota</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Restorasi Mangrove</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Edukasi Lingkungan</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Pemberdayaan Komunitas</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Penelitian & Inovasi</a></li>
+                    </ul>
+                </div>
+                
+                <div class="w-full md:w-1/4 mb-8 md:mb-0">
+                    <h3 class="font-bold text-lg mb-6">Dukungan</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Donasi</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Jadi Relawan</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Program CSR</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Kampanye Perusahaan</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Adopsi Pohon</a></li>
+                    </ul>
+                </div>
+                
+                <div class="w-full md:w-1/4">
+                    <h3 class="font-bold text-lg mb-6">Kontak</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="text-green-400 mr-3 mt-1"><i class="fas fa-map-marker-alt"></i></span>
+                            <span class="text-gray-400">Jl. Hijau Raya No. 25, Jakarta Selatan, Indonesia 12750</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-green-400 mr-3"><i class="fas fa-envelope"></i></span>
+                            <a href="mailto:info@hijaulangit.org" class="text-gray-400 hover:text-white transition-colors duration-300">info@hijaulangit.org</a>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-green-400 mr-3"><i class="fas fa-phone"></i></span>
+                            <a href="tel:+6221555123" class="text-gray-400 hover:text-white transition-colors duration-300">+62 21 555 123</a>
+                        </li>
+                        <li class="mt-4">
+                            <a href="#" class="bg-green-500 hover:bg-green-600 transition-colors duration-300 px-4 py-2 rounded-md font-medium">Hubungi Kami</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="w-full border-t border-gray-700 mt-12 pt-8">
+                    <div class="flex flex-col md:flex-row justify-between items-center">
+                        <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Hijau Langit. Hak Cipta Dilindungi.</p>
+                        <div class="flex space-x-6">
+                            <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors duration-300">Kebijakan Privasi</a>
+                            <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors duration-300">Syarat & Ketentuan</a>
+                            <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors duration-300">Peta Situs</a>
+                        </div>
+                    </div>
+                </div>
+</div>
+</div>
+</footer>
+</body>
+</html>
